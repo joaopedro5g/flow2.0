@@ -1,5 +1,8 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { randomUUID } from 'crypto';
-import { Column, Entity, PrimaryColumn } from 'typeorm';
+import { Column, Entity, OneToMany, PrimaryColumn } from 'typeorm';
+import { InvitedEntity } from './inveted.entity';
+import { UserEntity } from './user.entity';
 
 @Entity('episode')
 export class EpisodeEntity {
@@ -12,9 +15,24 @@ export class EpisodeEntity {
   @Column()
   description: string;
 
-  @Column()
-  invited: string;
+  @OneToMany(
+    (_inveted: InvitedEntity) => InvitedEntity,
+    (episode) => episode.episodes,
+    {
+      nullable: true,
+    },
+  )
+  invited: InvitedEntity;
 
   @Column()
   audioUrl: string;
+
+  @OneToMany(
+    (_inveted: UserEntity) => UserEntity,
+    (episode) => episode.episodeLiked,
+    {
+      nullable: true,
+    },
+  )
+  likes: UserEntity;
 }

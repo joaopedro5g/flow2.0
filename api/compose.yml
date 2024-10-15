@@ -1,0 +1,48 @@
+services:
+  api:
+    build: .
+    command: yarn start:dev
+    develop:
+      watch:
+        - action: sync
+          path: .
+          target: ./src
+          ignore:
+            - node_modules
+        - action: rebuild
+          path: package.json
+    environment:
+      - DATABASE_URL=db
+      - DATABASE_PORT=3306
+      - DATABASE_USER=root
+      - DATABASE_PASS=12345678
+      - DATABASE_NAME=flow
+    volumes:
+      - .:/usr/app
+    depends_on:
+      - db
+    networks:
+      - app
+    ports:
+      - 3333:3000
+
+  db:
+    image: mariadb
+    restart: always
+    environment:
+      MARIADB_ROOT_PASSWORD: 12345678
+    ports:
+      - 3306:3306
+    networks:
+      - app
+
+  adminer:
+    image: adminer
+    restart: always
+    networks:
+      - app
+    ports:
+      - 8080:8080
+
+networks:
+  app:
