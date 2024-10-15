@@ -1,0 +1,9 @@
+[package]
+name = "libflow"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+rodio = "0.19.0"
+ureq = "2.10.1"
+tokio = { version = "1.40.0", features = ["full"] }
