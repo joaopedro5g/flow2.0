@@ -5,10 +5,12 @@ import { EpisodeEntity } from 'src/entities/episode.entity';
 import { InvitedEntity } from 'src/entities/inveted.entity';
 import { UserEntity } from 'src/entities/user.entity';
 import { EpisodeService } from 'src/services/episode.service';
+import { UserModule } from './user.module';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([EpisodeEntity, InvitedEntity, UserEntity]),
+    UserModule,
   ],
   controllers: [EpisodeController],
   providers: [EpisodeService],

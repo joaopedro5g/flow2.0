@@ -3,12 +3,12 @@ import { randomUUID } from 'crypto';
 import { Column, Entity, ManyToOne, PrimaryColumn, ColumnType } from 'typeorm';
 import { EpisodeEntity } from './episode.entity';
 
-enum Role {
+export enum Role {
   ADMIN = 'admin',
   USER = 'user',
 }
 
-enum MemberPlans {
+export enum MemberPlans {
   NONE = 'none',
   HUMILDE = 'humilde',
   BURGES = 'burges',

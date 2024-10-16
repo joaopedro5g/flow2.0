@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { ConflictException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { RegisterUserDTO } from 'src/dto/register-user.dto';
 import { UserEntity } from 'src/entities/user.entity';
@@ -12,9 +12,11 @@ export class UserService {
     private readonly userRepo: Repository<UserEntity>,
   ) {}
   async register(input: RegisterUserDTO): Promise<UserEntity> {
+    let user = await this.userRepo.findOneBy({ email: input.email });
+    if (user) throw new ConflictException({ message: 'User with email exist' });
     const salt = genSaltSync(8);
     const password = hashSync(input.password, salt);
-    const ep = this.userRepo.create({ ...input, password });
-    return await this.userRepo.save(ep);
+    user = this.userRepo.create({ ...input, password });
+    return await this.userRepo.save(user);
   }
 }

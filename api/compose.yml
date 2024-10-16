@@ -11,12 +11,6 @@ services:
   #           - node_modules
   #       - action: rebuild
   #         path: package.json
-  #   environment:
-  #     - DATABASE_URL=db
-  #     - DATABASE_PORT=3306
-  #     - DATABASE_USER=root
-  #     - DATABASE_PASS=12345678
-  #     - DATABASE_NAME=flow
   #   volumes:
   #     - .:/usr/app
   #   depends_on:
