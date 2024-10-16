@@ -6,6 +6,7 @@ import { InvitedEntity } from 'src/entities/inveted.entity';
 import { UserEntity } from 'src/entities/user.entity';
 import { EpisodeService } from 'src/services/episode.service';
 import { UserModule } from './user.module';
+import { EpisodeRepository } from 'src/repositories/episode.repository';
 
 @Module({
   imports: [
@@ -13,6 +14,6 @@ import { UserModule } from './user.module';
     UserModule,
   ],
   controllers: [EpisodeController],
-  providers: [EpisodeService],
+  providers: [EpisodeService, EpisodeRepository],
 })
 export class EpisodeModule {}

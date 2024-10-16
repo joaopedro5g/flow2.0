@@ -10,7 +10,7 @@ export class EpisodeController {
 
   @Auth(Role.ADMIN)
   @Post()
-  async register(@Body() ep: RegisterEpisodeDTO) {
-    return await this.epService.register(ep);
+  async create(@Body() ep: RegisterEpisodeDTO) {
+    return await this.epService.create(ep);
   }
 }

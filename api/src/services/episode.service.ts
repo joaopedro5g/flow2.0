@@ -1,17 +1,12 @@
 import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
 import { RegisterEpisodeDTO } from 'src/dto/register-episode.dto';
 import { EpisodeEntity } from 'src/entities/episode.entity';
-import { Repository } from 'typeorm';
+import { EpisodeRepository } from 'src/repositories/episode.repository';
 
 @Injectable()
 export class EpisodeService {
-  constructor(
-    @InjectRepository(EpisodeEntity)
-    private readonly epRepo: Repository<EpisodeEntity>,
-  ) {}
-  async register(input: RegisterEpisodeDTO): Promise<EpisodeEntity> {
-    const ep = this.epRepo.create(input);
-    return await this.epRepo.save(ep);
+  constructor(private readonly repository: EpisodeRepository) {}
+  async create(input: RegisterEpisodeDTO): Promise<EpisodeEntity | void> {
+    return await this.repository.create(input);
   }
 }
