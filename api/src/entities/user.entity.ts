@@ -8,6 +8,12 @@ enum Role {
   USER = 'user',
 }
 
+enum MemberPlans {
+  NONE = 'none',
+  HUMILDE = 'humilde',
+  BURGES = 'burges',
+}
+
 @Entity('user')
 export class UserEntity {
   @PrimaryColumn({ default: randomUUID() })
@@ -28,6 +34,9 @@ export class UserEntity {
   )
   episodeLiked: EpisodeEntity[];
 
-  @Column({ type: 'varchar' })
+  @Column({ type: 'varchar', default: Role.USER })
   role: Role;
+
+  @Column({ type: 'varchar', default: MemberPlans.NONE })
+  plan: MemberPlans;
 }
