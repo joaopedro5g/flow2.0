@@ -6,12 +6,13 @@ import { EpisodeEntity } from './episode.entity';
 export enum Role {
   ADMIN = 'admin',
   USER = 'user',
+  REMOTE = 'remote',
 }
 
 export enum MemberPlans {
   NONE = 'none',
   HUMILDE = 'humilde',
-  BURGES = 'burges',
+  BURGES = 'burgues',
 }
 
 @Entity('user')

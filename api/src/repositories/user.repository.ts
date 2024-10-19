@@ -23,4 +23,7 @@ export class UserRepository extends IRepository<UserEntity> {
   ): Promise<UserEntity | UserEntity[]> {
     return await this.repository.findOneBy(input);
   }
+  findAll(): Promise<UserEntity[]> {
+    return this.repository.find();
+  }
 }

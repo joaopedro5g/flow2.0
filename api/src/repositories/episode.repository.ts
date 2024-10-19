@@ -22,4 +22,8 @@ export class EpisodeRepository extends IRepository<EpisodeEntity> {
   findOne(input: unknown): Promise<void | EpisodeEntity | EpisodeEntity[]> {
     throw new Error('Method not implemented.');
   }
+
+  findAll(): Promise<EpisodeEntity[]> {
+    return this.epRepo.find();
+  }
 }

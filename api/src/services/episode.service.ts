@@ -9,4 +9,8 @@ export class EpisodeService {
   async create(input: RegisterEpisodeDTO): Promise<EpisodeEntity | void> {
     return await this.repository.create(input);
   }
+
+  async findAll() {
+    return this.repository.findAll();
+  }
 }

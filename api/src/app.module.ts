@@ -3,6 +3,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { EpisodeModule } from './modules/episode.module';
 import { UserModule } from './modules/user.module';
+import { FlowConnectModule } from './modules/flow-connect.module';
 
 @Module({
   imports: [
@@ -26,6 +27,7 @@ import { UserModule } from './modules/user.module';
     }),
     EpisodeModule,
     UserModule,
+    FlowConnectModule,
   ],
 })
 export class AppModule {}

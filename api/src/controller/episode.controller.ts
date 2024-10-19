@@ -1,4 +1,4 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Get, Post } from '@nestjs/common';
 import { RegisterEpisodeDTO } from 'src/dto/register-episode.dto';
 import { EpisodeService } from 'src/services/episode.service';
 import { Auth } from 'src/decorators/auth.decorator';
@@ -12,5 +12,10 @@ export class EpisodeController {
   @Post()
   async create(@Body() ep: RegisterEpisodeDTO) {
     return await this.epService.create(ep);
+  }
+
+  @Get()
+  async findAll() {
+    return this.epService.findAll();
   }
 }

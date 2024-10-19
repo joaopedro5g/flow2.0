@@ -1,0 +1,21 @@
+services:
+  db:
+    image: mariadb
+    restart: always
+    environment:
+      MARIADB_ROOT_PASSWORD: 12345678
+    ports:
+      - 3306:3306
+    networks:
+      - app
+
+  adminer:
+    image: adminer
+    restart: always
+    networks:
+      - app
+    ports:
+      - 8080:8080
+
+networks:
+  app:
