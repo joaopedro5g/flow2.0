@@ -34,10 +34,12 @@ export class RoleGuard implements CanActivate {
   canActivate(
     ctx: ExecutionContext,
   ): boolean | Promise<boolean> | Observable<boolean> {
+    const typeRequest = ctx.getType();
     const user = this.getUser(ctx);
 
     const perm = this.verifyPerm(ctx, user);
-    if (!perm) ctx.switchToWs().getClient<Socket>().disconnect();
+    if (!perm && typeRequest === 'ws')
+      ctx.switchToWs().getClient<Socket>().disconnect();
     // console.log(user, perm);
     return perm;
   }

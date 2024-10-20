@@ -13,7 +13,7 @@ export class EpisodeRepository extends IRepository<EpisodeEntity> {
   ) {
     super();
   }
-  async create(input: RegisterEpisodeDTO): Promise<void | EpisodeEntity> {
+  async create(input: RegisterEpisodeDTO): Promise<EpisodeEntity> {
     const ep = this.epRepo.create(input);
     return await this.epRepo.save(ep);
   }

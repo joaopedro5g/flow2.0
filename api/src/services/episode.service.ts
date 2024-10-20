@@ -6,7 +6,7 @@ import { EpisodeRepository } from 'src/repositories/episode.repository';
 @Injectable()
 export class EpisodeService {
   constructor(private readonly repository: EpisodeRepository) {}
-  async create(input: RegisterEpisodeDTO): Promise<EpisodeEntity | void> {
+  async create(input: RegisterEpisodeDTO): Promise<EpisodeEntity> {
     return await this.repository.create(input);
   }
 

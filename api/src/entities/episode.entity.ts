@@ -24,7 +24,7 @@ export class EpisodeEntity {
   )
   invited: InvitedEntity;
 
-  @Column()
+  @Column({ nullable: true })
   audioUrl: string;
 
   @OneToMany(

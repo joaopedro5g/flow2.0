@@ -1,4 +1,13 @@
 services:
+  rmq:
+    image: rabbitmq:4-management-alpine
+    networks:
+      - app
+    ports:
+      - 8081:15672
+      - 5672:5672
+      - 25676:25676
+
   db:
     image: mariadb
     restart: always
