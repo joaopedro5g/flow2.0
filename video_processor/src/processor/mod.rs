@@ -3,7 +3,9 @@ use std::fs::{File, remove_file};
 use std::io::{self};
 use std::process::Command;
 
-pub fn convert_video(input_url: &str, output_path: &str, width: u32, height: u32) -> Result<(), Box<dyn Error>> {
+use crate::upload::upload_r2;
+
+pub async fn convert_video(input_url: &str, output_path: &str, width: u16, height: u16, ep_id: String) -> Result<(), Box<dyn Error>> {
     let response = ureq::get(input_url).call()?;
 
     if response.status() != 200 {
@@ -28,7 +30,9 @@ pub fn convert_video(input_url: &str, output_path: &str, width: u32, height: u32
         return Err("Falha ao converter o vídeo".into());
     }
 
-    remove_file(output_path)?;
+    remove_file(temp)?;
+
+    upload_r2(&mut file, &ep_id, height).await.unwrap();
 
     Ok(())
 

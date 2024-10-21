@@ -4,8 +4,9 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-tokio = "1.40.0"
+tokio = { version = "1.40.0", features = ["full"] }
 amiquip = "0.4.2"
 serde_json = "1.0.132"
 serde = "1.0.210"
 ureq = "2.10.1"
+cloudflare-r2-rs = "0.6.6"

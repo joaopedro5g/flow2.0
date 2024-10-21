@@ -11,6 +11,7 @@ pub struct Video {
 #[derive(Deserialize, Debug)]
 pub struct Data {
     pub video: Video,
+    pub id: String
 }
 
 #[derive(Deserialize, Debug)]
