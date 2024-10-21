@@ -9,18 +9,21 @@ LibFlow é uma lib para adicionar em sistemas embarcados, que vem com funções 
 ### `init`
 
 - **Descrição**: Inicializa a biblioteca e retorna uma implementação de WebSocket.
+- **Parâmetros**: Nenhum.
 - **Retorno**: Uma estrutura que contém a função `next`, que pode ser chamada para pular os episódios.
 
 ### `free_init`
 
 - **Descrição**: Libera a memória alocada durante a inicialização da biblioteca.
 - **Parâmetros**: Nenhum.
+- **Retorno**: Nenhum.
 
 ### `play`
 
 - **Descrição**: Executa a função de reprodução no projeto, onde é possível tocar o som.
 - **Parâmetros**:
   - `url`: Ponteiro para uma string C contendo a URL do episódio a ser reproduzido.
+- **Retorno**: Nenhum.
 
 > ⚠️ Lembrando que ainda está em desenvolvimento essa lib (o projeto inteiro), então não tem métodos suficientes para realizar testes.
 
