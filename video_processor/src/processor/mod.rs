@@ -55,11 +55,17 @@ pub async fn convert_video(input_url: &str, width: u16, height: u16, ep_id: Stri
     if !status.success() {
         return Err(Error::new(std::io::ErrorKind::ConnectionAborted, "Falha ao converter o vídeo".to_string()));
     }
-    
-    println!("Iniciando o upload do vídeo...");
-    upload_r2(temp.into(), &ep_id, height).await.unwrap();
 
+    println!("Iniciando limpeza...");
+    
     remove_file(temp).await.expect("Erro ao deletar o arquivo temporário");
+    println!("Limpeza executado com sucesso...");
+    println!("Iniciando o upload do vídeo...");
+
+    upload_r2(output_file.clone(), &ep_id, height).await.unwrap();
+    println!("Finalizado o Upload...");
+
+    remove_file(output_file.clone()).await.expect("Erro ao deletar o arquivo compilado");
 
     Ok(())
 }
