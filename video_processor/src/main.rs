@@ -2,6 +2,10 @@ mod rabbitmq;
 mod processor;
 mod upload;
 
+extern crate dotenv;
+
+use dotenv::dotenv;
+
 use tokio::task;
 
 use rabbitmq::RabbitMQConnect;
@@ -9,6 +13,7 @@ use processor::convert_video;
 
 #[tokio::main]
 async fn main() {
+    dotenv().ok();
     let rmq = RabbitMQConnect::init();
     let quality = [(640,480), (640,360)];
     rmq.on_create(|data| {
@@ -18,7 +23,7 @@ async fn main() {
             let url = url_data.clone();
             let id = id_data.clone();
             task::spawn(async move {
-                convert_video(&url, &format!("video-{}p.mp4", height), width,height, id).await.unwrap();
+                convert_video(&url, width, height, id).await.expect("Error on converted video");
             });
         });
     });

@@ -1,18 +1,33 @@
-use std::{fs::File, io::{Error, Read}};
+use std::{io::Error, path::Path};
+use rusoto_core::{ByteStream, Region};
+use rusoto_s3::{PutObjectRequest, S3Client, S3};
+use tokio::{fs::File, io::AsyncReadExt};
+use futures::stream;
+use bytes::Bytes;
 
-use cloudflare_r2_rs::r2::R2Manager;
+pub async fn upload_r2(file_path: String, ep_id: &str, quality: u16) -> Result<(), Error> {
+    let path = Path::new(&file_path);
+    let bucket = "nixsolucoes";
+    let key = format!("{}/{}.mp4", ep_id, quality);
+    let mut file = File::open(&path).await?;
+    let endpoint = std::env::var("AWS_ENDPOINT_URL").unwrap();
 
-pub async fn upload_r2(file: &mut File, ep_id: &str, quality: u16) -> Result<(), Error> {
-    let api_key = std::env::var("CLOUDFLARE_ACCESS_KEY").unwrap();
-    let key_secret = std::env::var("CLOUDFLARE_KEY_SECRET").unwrap();
-    let account_id = std::env::var("CLOUDFLARE_ACCOUNT_ID").unwrap();
-    let url = &format!("https://{}.r2.cloudflarestorage.com", &account_id);
-    let r2 = R2Manager::new("nixsolucoes",url , &api_key, &key_secret).await;
+    let client = S3Client::new(Region::Custom { name: "auto".into(), endpoint  });
 
-    let folder = &format!("/uploads/{}/{}", ep_id, quality);
+    let file_size = file.metadata().await.unwrap().len();
     let mut buffer = Vec::new();
+    file.read_to_end(&mut buffer).await.expect("Error on read buffer of file");
 
-    file.read_to_end(&mut buffer).expect("Error on process to buffer");
-    r2.upload(folder, &buffer, Some("max-age=60"), Some("video/mp4")).await;
+    let bytes = Bytes::from(buffer);
+    let stream = stream::once(async { Ok::<Bytes, Error>(bytes) });
+
+    client.put_object(PutObjectRequest {
+        body: Some(ByteStream::new(stream)),
+        bucket: bucket.into(),
+        content_length: Some(file_size.try_into().unwrap()),
+        content_type: Some("video/mp4".to_string()),
+        key,
+        ..Default::default()
+    }).await.unwrap();
     Ok(())
 }
