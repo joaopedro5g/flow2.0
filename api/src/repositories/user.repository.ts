@@ -4,6 +4,7 @@ import { IRepository } from '../interfaces/repository.interface';
 import { UserEntity } from 'src/entities/user.entity';
 import { FindOptionsWhere, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
+import { randomUUID } from 'node:crypto';
 
 @Injectable()
 export class UserRepository extends IRepository<UserEntity> {
@@ -14,7 +15,8 @@ export class UserRepository extends IRepository<UserEntity> {
     super();
   }
   async create(input: RegisterUserDTO): Promise<UserEntity> {
-    const user = this.repository.create(input);
+    const id = randomUUID();
+    const user = this.repository.create({ ...input, id });
     return await this.repository.save(user);
   }
 
