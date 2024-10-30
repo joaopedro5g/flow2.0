@@ -1,12 +1,15 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 
+import { usePathname } from "next/navigation";
 import {
   createContext,
+  MutableRefObject,
   ReactNode,
   useCallback,
   useContext,
   useEffect,
-  useMemo,
+  useRef,
   useState,
 } from "react";
 
@@ -16,6 +19,8 @@ interface PlayerContext {
   pause: () => void;
   currentTime: number;
   seek: (position: number) => void;
+  updateCurrentTime: (position: number) => void;
+  videoRef: MutableRefObject<HTMLVideoElement>;
 }
 
 const Context = createContext({} as PlayerContext);
@@ -24,25 +29,30 @@ export const usePlayer = () => useContext(Context);
 
 export const PlayerProvider = ({ children }: { children: ReactNode }) => {
   const [isPlay, setPlay] = useState(false);
-  const [currentTime, setCurrentime] = useState(0);
-  const audio = useMemo(
-    () =>
-      new Audio(
-        "https://cdn.nixsolucoes.com.br/tmp/1e4e0961-3476-4318-b0fe-b727156cab62.mp4"
-      ),
-    []
-  );
+  const pathname = usePathname();
+  const videoRef = useRef<HTMLVideoElement>({} as HTMLVideoElement);
+  const [currentTime, setCurrentTime] = useState(0);
   const seek = (position: number) => {
-    audio.currentTime = position;
+    if (videoRef.current) {
+      videoRef.current.currentTime = position;
+    }
   };
   const resume = useCallback(() => {
     setPlay(true);
-    audio.play();
-  }, [audio]);
+    videoRef.current?.play();
+  }, []);
   const pause = useCallback(() => {
     setPlay(false);
-    audio.pause();
-  }, [audio]);
+    videoRef.current?.pause();
+  }, []);
+  // const handleStart = useCallback(() => {
+  //   if (videoRef.current) {
+  //     videoRef.current.currentTime = currentTime;
+  //     videoRef.current.addEventListener("canplay", resume);
+  //   }
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [videoRef, resume]);
+  // useEffect(handleStart, [handleStart, pathname]);
   useEffect(() => {
     if ("mediaSession" in navigator) {
       const media = navigator.mediaSession;
@@ -76,15 +86,30 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
       media.setActionHandler("pause", () => pause());
     }
   }, [pause, resume]);
-  audio.addEventListener("timeupdate", () => {
-    if (audio.currentTime === audio.duration) {
-      audio.currentTime = 0;
-      setPlay(false);
+  const handleUpdateTime = useCallback(() => {
+    if (videoRef.current) {
+      videoRef.current?.addEventListener("timeupdate", (_) => {
+        if (videoRef.current.currentTime === videoRef.current.duration) {
+          pause();
+          videoRef.current.currentTime = 0;
+          seek(0);
+        }
+      });
     }
-    setCurrentime((audio.currentTime / audio.duration) * 100);
-  });
+  }, [pause]);
+  useEffect(handleUpdateTime, [handleUpdateTime]);
   return (
-    <Context.Provider value={{ currentTime, isPlay, pause, resume, seek }}>
+    <Context.Provider
+      value={{
+        currentTime,
+        isPlay,
+        pause,
+        resume,
+        seek,
+        videoRef,
+        updateCurrentTime: setCurrentTime,
+      }}
+    >
       {children}
     </Context.Provider>
   );

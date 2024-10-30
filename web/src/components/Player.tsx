@@ -1,66 +1,86 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-unsafe-function-type */
 "use client";
 
-import { motion, useAnimation } from "framer-motion";
-import { useRef } from "react";
-import { IoPlaySkipForward, IoPlaySkipBackSharp } from "react-icons/io5";
-import ButtonPlayPausePlayer from "./ButtonPlayPausePlayer";
 import { usePlayer } from "@/core/Context";
-
-const debounce = <T extends (...args: unknown[]) => unknown>(
-  func: T,
-  delay: number
-): ((...args: Parameters<T>) => void) => {
-  let timer: ReturnType<typeof setTimeout> | undefined;
-  return (...args: Parameters<T>) => {
-    if (timer) clearTimeout(timer);
-    timer = setTimeout(() => func(...args), delay);
-  };
-};
+import { motion } from "framer-motion";
+import { FaExpandAlt } from "react-icons/fa";
+import { useRouter, usePathname } from "next/navigation";
+import {
+  IoMdPlay,
+  IoMdPause,
+  IoMdSkipBackward,
+  IoMdSkipForward,
+} from "react-icons/io";
+import { useCallback, useEffect } from "react";
 
 export default function Player() {
-  const { currentTime } = usePlayer();
-  const animate = useAnimation();
-  const mouseInside = useRef(false);
-  const debouncedHide = useRef(
-    debounce(async () => {
-      if (!mouseInside.current) {
-        await animate.start({ y: -65 });
-      }
-    }, 500)
-  ).current;
-
-  const onHoverLeave = () => {
-    mouseInside.current = false;
-    debouncedHide();
-  };
-
-  const onHoverEnter = () => {
-    mouseInside.current = true;
-    animate.start({ y: 0 });
-  };
-
+  const {
+    isPlay,
+    pause,
+    resume,
+    videoRef,
+    currentTime,
+    seek,
+    updateCurrentTime,
+  } = usePlayer();
+  const pathname = usePathname();
+  const router = useRouter();
+  const handleUpdateTime = useCallback(() => {
+    if (videoRef.current) {
+      videoRef.current?.addEventListener("timeupdate", (_) => {
+        updateCurrentTime(videoRef.current?.currentTime);
+      });
+    }
+  }, [updateCurrentTime, videoRef]);
+  useEffect(handleUpdateTime, [handleUpdateTime]);
+  useEffect(() => {
+    if (videoRef.current) {
+      videoRef.current.currentTime = currentTime;
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pathname]);
   return (
-    <motion.div
-      animate={animate}
-      initial={{ y: -65 }}
-      onMouseEnter={onHoverEnter}
-      onMouseLeave={onHoverLeave}
-      className="w-full h-20 bg-gray-200 shadow-md shadow-slate-400 relative rounded-b-md flex justify-between items-center"
-    >
-      <div />
-      <div className="flex justify-center items-center text-3xl gap-2">
-        <IoPlaySkipBackSharp className="cursor-pointer" />
-        <ButtonPlayPausePlayer />
-        <IoPlaySkipForward className="cursor-pointer" />
-      </div>
-      <div />
-      <div className="w-full h-1 absolute bottom-0 rounded-b-md bg-gray-500">
-        <div
-          style={{ width: `${currentTime}%` }}
-          className="h-1 rounded-bl-md bg-yellow-600"
-        />
-      </div>
-    </motion.div>
+    <>
+      {pathname !== "/play" && (
+        <motion.div
+          layout
+          className={`w-96 h-[16.5rem] bg-black fixed bottom-4 right-2 z-20 rounded-md`}
+        >
+          <motion.div layout className="w-full h-[13.5rem]  rounded-t-md">
+            <motion.div className="h-full relative rounded-t-md">
+              <motion.video
+                layout
+                layoutId="video-player"
+                ref={videoRef}
+                className="w-full rounded-t-md"
+                autoPlay
+                src="https://cdn.nixsolucoes.com.br/LADY%20LESTE.mp4"
+              />
+              <div className="absolute inset-0 bg-gradient-to-tr from-neutral-900 to-transparent transition-opacity duration-150 ease-in-out opacity-0 hover:opacity-100 flex items-center justify-center text-4xl text-white gap-3">
+                <FaExpandAlt
+                  onClick={() => router.push("/play")}
+                  className="rotate-90 text-base cursor-pointer absolute top-5 left-2"
+                />
+                <IoMdSkipBackward className="cursor-pointer" />
+                {isPlay ? (
+                  <IoMdPause onClick={pause} className="cursor-pointer" />
+                ) : (
+                  <IoMdPlay onClick={resume} className="cursor-pointer" />
+                )}
+                <IoMdSkipForward className="cursor-pointer" />
+              </div>
+            </motion.div>
+          </motion.div>
+          <motion.div
+            layout
+            className="w-full h-12 rounded-b-md bg-neutral-900 flex flex-col items-start justify-center px-4 py-2"
+          >
+            <span className="text-white text-lg">Glória Groove</span>
+            <span className="text-zinc-300 text-sm">Flow Podcast</span>
+          </motion.div>
+        </motion.div>
+      )}
+    </>
   );
 }

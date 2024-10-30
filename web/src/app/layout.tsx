@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import { Roboto } from "next/font/google";
 import "./globals.css";
-import Player from "@/components/Player";
 import { PlayerProvider } from "@/core/Context";
+import Player from "@/components/Player";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -23,10 +23,8 @@ export default function RootLayout({
     <html lang="pt">
       <body className="" style={roboto.style}>
         <PlayerProvider>
+          <Player />
           {children}
-          <div className="w-full h-full px-2 fixed top-0">
-            <Player />
-          </div>
         </PlayerProvider>
       </body>
     </html>
