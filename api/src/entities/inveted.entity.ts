@@ -18,5 +18,5 @@ export class InvitedEntity {
   episodes: EpisodeEntity[];
 
   @Column()
-  backdropUrl: string;
+  avatar: string;
 }

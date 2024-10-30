@@ -28,7 +28,8 @@ export class EpisodeController {
     @UploadedFile() file: Express.Multer.File,
   ) {
     const data = await this.epService.create(ep);
-    return await this.uploadService.uploadFile(file, data.id);
+    await this.uploadService.uploadFile(file, data.id);
+    return data;
   }
 
   @Get()

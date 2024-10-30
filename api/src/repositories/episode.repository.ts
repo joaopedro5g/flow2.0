@@ -5,6 +5,7 @@ import { EpisodeEntity } from 'src/entities/episode.entity';
 import { IRepository } from 'src/interfaces/repository.interface';
 import { Repository } from 'typeorm';
 import { randomUUID } from 'node:crypto';
+import { ChannelEntity } from 'src/entities/channel.entity';
 
 @Injectable()
 export class EpisodeRepository extends IRepository<EpisodeEntity> {
@@ -16,7 +17,11 @@ export class EpisodeRepository extends IRepository<EpisodeEntity> {
   }
   async create(input: RegisterEpisodeDTO): Promise<EpisodeEntity> {
     const id = randomUUID();
-    const ep = this.repository.create({ ...input, id });
+    const ep = this.repository.create({
+      ...input,
+      id,
+      channel: input.channelId as unknown as ChannelEntity,
+    });
     return await this.repository.save(ep);
   }
 

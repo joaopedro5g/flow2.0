@@ -4,6 +4,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { EpisodeModule } from './modules/episode.module';
 import { UserModule } from './modules/user.module';
 import { FlowConnectModule } from './modules/flow-connect.module';
+import { ChannelModule } from './modules/channel.module';
 
 @Module({
   imports: [
@@ -28,6 +29,7 @@ import { FlowConnectModule } from './modules/flow-connect.module';
     EpisodeModule,
     UserModule,
     FlowConnectModule,
+    ChannelModule,
   ],
 })
 export class AppModule {}
