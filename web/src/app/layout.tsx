@@ -16,8 +16,10 @@ const roboto = Roboto({
 
 export default function RootLayout({
   children,
+  modal,
 }: Readonly<{
   children: React.ReactNode;
+  modal: React.ReactNode;
 }>) {
   return (
     <html lang="pt">
@@ -25,6 +27,7 @@ export default function RootLayout({
         <PlayerProvider>
           <Player />
           {children}
+          {modal}
         </PlayerProvider>
       </body>
     </html>

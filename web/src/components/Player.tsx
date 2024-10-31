@@ -27,7 +27,7 @@ export default function Player() {
   const pathname = usePathname();
   const router = useRouter();
   const handleUpdateTime = useCallback(() => {
-    if (videoRef.current) {
+    if (videoRef.current && videoRef.current instanceof HTMLVideoElement) {
       videoRef.current?.addEventListener("timeupdate", (_) => {
         updateCurrentTime(videoRef.current?.currentTime);
       });
@@ -35,26 +35,26 @@ export default function Player() {
   }, [updateCurrentTime, videoRef]);
   useEffect(handleUpdateTime, [handleUpdateTime]);
   useEffect(() => {
-    if (videoRef.current) {
-      videoRef.current.currentTime = currentTime;
+    if (videoRef.current && videoRef.current instanceof HTMLVideoElement) {
+      if (pathname !== "play") videoRef.current.currentTime = currentTime;
+      videoRef.current.addEventListener("canplay", resume);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pathname]);
   return (
-    <>
+    <motion.div
+      layout
+      className={`w-96 h-[16.5rem] fixed bottom-4 right-2 z-20 rounded-md`}
+    >
       {pathname !== "/play" && (
-        <motion.div
-          layout
-          className={`w-96 h-[16.5rem] bg-black fixed bottom-4 right-2 z-20 rounded-md`}
-        >
+        <>
           <motion.div layout className="w-full h-[13.5rem]  rounded-t-md">
-            <motion.div className="h-full relative rounded-t-md">
+            <motion.div className="h-full relative rounded-t-md bg-black">
               <motion.video
                 layout
                 layoutId="video-player"
                 ref={videoRef}
                 className="w-full rounded-t-md"
-                autoPlay
                 src="https://cdn.nixsolucoes.com.br/LADY%20LESTE.mp4"
               />
               <div className="absolute inset-0 bg-gradient-to-tr from-neutral-900 to-transparent transition-opacity duration-150 ease-in-out opacity-0 hover:opacity-100 flex items-center justify-center text-4xl text-white gap-3">
@@ -79,8 +79,8 @@ export default function Player() {
             <span className="text-white text-lg">Glória Groove</span>
             <span className="text-zinc-300 text-sm">Flow Podcast</span>
           </motion.div>
-        </motion.div>
+        </>
       )}
-    </>
+    </motion.div>
   );
 }

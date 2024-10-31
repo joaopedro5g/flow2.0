@@ -1,11 +1,10 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
-
 import { usePlayer } from "@/core/Context";
 import { motion } from "framer-motion";
 import { useCallback, useEffect } from "react";
-// import { useCallback, useEffect } from "react";
-export default function PlayPage() {
+
+export default function ModalPage() {
   const { videoRef, updateCurrentTime } = usePlayer();
 
   const handleUpdateTime = useCallback(() => {
@@ -17,13 +16,12 @@ export default function PlayPage() {
   }, [updateCurrentTime, videoRef]);
   useEffect(handleUpdateTime, [handleUpdateTime]);
   return (
-    <div className="w-full bg-black">
+    <div className="fixed z-50 inset-0 bg-gradient-to-t from-black to-[#000d]">
       <motion.video
-        layoutId="video-player"
-        layout
-        autoPlay
         ref={videoRef}
         src="https://cdn.nixsolucoes.com.br/LADY%20LESTE.mp4"
+        layout
+        layoutId="video-player"
       />
     </div>
   );

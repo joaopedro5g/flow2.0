@@ -33,7 +33,7 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
   const videoRef = useRef<HTMLVideoElement>({} as HTMLVideoElement);
   const [currentTime, setCurrentTime] = useState(0);
   const seek = (position: number) => {
-    if (videoRef.current) {
+    if (videoRef.current && videoRef.current instanceof HTMLVideoElement) {
       videoRef.current.currentTime = position;
     }
   };
@@ -46,7 +46,7 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
     videoRef.current?.pause();
   }, []);
   // const handleStart = useCallback(() => {
-  //   if (videoRef.current) {
+  //   if (videoRef.current && videoRef.current instanceof HTMLVideoElement) {
   //     videoRef.current.currentTime = currentTime;
   //     videoRef.current.addEventListener("canplay", resume);
   //   }
@@ -87,7 +87,7 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
     }
   }, [pause, resume]);
   const handleUpdateTime = useCallback(() => {
-    if (videoRef.current) {
+    if (videoRef.current && videoRef.current instanceof HTMLVideoElement) {
       videoRef.current?.addEventListener("timeupdate", (_) => {
         if (videoRef.current.currentTime === videoRef.current.duration) {
           pause();
